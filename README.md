@@ -3,8 +3,7 @@ MusicFestFastTicket
 
 Çalıştırma komutları
 ```
-export FLASK_APP=app.py
-flask run
+gunicorn app:app -b localhost:5000
 ```
 
 Flask+FlaskAlchemy kullanma tutorialı
