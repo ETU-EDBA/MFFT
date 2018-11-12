@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from jinja2 import Template
 app = Flask(__name__)
 #Temporary db information
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gjsvisnidpytcu:1384bad225c73da42ffa760095e745251dc9815a1b482473e4100170f400e8fd@ec2-54-217-216-149.eu-west-1.compute.amazonaws.com:5432/d4tpgmffimbnjd'
