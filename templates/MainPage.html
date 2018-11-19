@@ -1,0 +1,42 @@
+{% extends 'Layout.html' %}
+
+{% block body %}
+
+
+<div class="container col-md-6 offset-md-3">
+
+  <br><br><br>
+  <h4>Festivaller</h4>
+  <br>
+
+ <!-- Albums list. -->
+  <ul class="list-group">
+
+      <li class="list-group-item">
+        <div class="card col-md-12" >
+          <img class="card-img-top" src="/static/festival.jpg" style="width: auto; height: 500px;" alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">Tarihi : 23 Kasım Perşembe</p>
+            <a href="../festival/" id="go_to_festival_button" value="" class="btn btn-primary">Festival Detaylarını görüntüle</a>
+            <br><hr><br>
+
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="card col-md-12" >
+          <img class="card-img-top" src="/static/festival2.jpg" style="width: auto; height: 500px;" alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">Tarihi : 25 Kasım Cumartesi</p>
+            <a href="../festival/" id="go_to_festival_button" value="" class="btn btn-primary">Festival Detaylarını görüntüle</a>
+            <br><hr><br>
+
+          </div>
+        </div>
+      </li>
+
+  </ul>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" >MFFT</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">AnaSayfa <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="festivals">Festivaller</a>
+      </li>
+    </ul>
+      <input class="form-control mr-sm-2" type="search" id="searchValue" placeholder="Festival Ara" aria-label="Search">
+      <button class="btn btn-outline-info my-2 my-sm-0" onclick="location.reload();location.href='/festivals/' + $('#searchValue').val()" id="searchButton"type="submit">Ara</button>
+    <li class="navbar-nav dropdown">
+      <a class="btn btn-outline-primary "onclick="document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';window.location = '/';">Çıkış Yap</a>
+    </li>
+  </div>
+</nav>
