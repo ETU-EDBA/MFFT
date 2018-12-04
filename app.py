@@ -4,7 +4,7 @@ from flask_marshmallow import Marshmallow
 from jinja2 import Template
 app = Flask(__name__, static_url_path='/static')
 #Temporary db information
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gjsvisnidpytcu:1384bad225c73da42ffa760095e745251dc9815a1b482473e4100170f400e8fd@ec2-54-217-216-149.eu-west-1.compute.amazonaws.com:5432/d4tpgmffimbnjd'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://kitmfcqydctwdp:2ccac3a43a66c7a875f549659b949bf5fb2230902abb3581e87c70cb5108e5d5@ec2-54-75-231-3.eu-west-1.compute.amazonaws.com:5432/d4kvinmlpmn77t'
 db = SQLAlchemy(app)
 
 
@@ -122,7 +122,7 @@ class MuzikKategorisi(db.Model):
 @app.route('/')
 def hello_world():
 
-    #db.create_all()        #veritabanlarini olusturur.
+    db.create_all()        #veritabanlarini olusturur.
     #newUser=students("burak@gmail.com","12345","Burak","Ankara", 0, "Normal")   #Yeni kullanici objesi olusturur.
     #db.session.add(newUser) #Bu student objesini veritabanina ekler
     #db.session.commit()    #Veritabanina bu degisiklikleri commitler
