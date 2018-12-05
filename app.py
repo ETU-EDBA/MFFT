@@ -121,13 +121,28 @@ class MuzikKategorisi(db.Model):
 
 @app.route('/')
 def hello_world():
+    muzi=Muzisyen("asli","")
+    db.sessionn.add(muzi)
+    db.session.commit()
+          #veritabanlarini olusturur.
+    #fest#ival1=Festival("adı","111","adb","1","ehg","dhdhg")
+    #db.sessionn.add(festival1)
+    #db.session.commit()
 
-    db.create_all()        #veritabanlarini olusturur.
     #newUser=students("burak@gmail.com","12345","Burak","Ankara", 0, "Normal")   #Yeni kullanici objesi olusturur.
     #db.session.add(newUser) #Bu student objesini veritabanina ekler
     #db.session.commit()    #Veritabanina bu degisiklikleri commitler
 
     return render_template('MainPage.html')
+
+
+@app.route('/festivals/<id>')
+def route_fest2(id):
+    return render_template('Festivals.html')
+
 @app.route('/festival/<id>')
 def route_fest(id):
-    return render_template('Festival.html')
+    festivals = Festival.query\
+            .filter(Festival.FestivalId == id)
+
+    return render_template('Festival.html', festivals = festivals )
