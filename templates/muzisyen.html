@@ -1,15 +1,11 @@
 {% extends 'Layout.html' %}
 
 {% block body %}
-  {% for festival in festivals %}
+  {% for muzisyen in muzisyenler %}
   <div class="card col-md-6 offset-md-3">
-    <img class="card-img-top" src={{url_for('static', filename=festival.FestivalAfisi)}} style="width: auto; height: 600px;" alt="Card image cap">
-    Festival: {{festival.FestivalAdi}}<br>
-    Festival Adresi: {{festival.FestivalAdresi}}<br>
-    Festival Baslama Tarihi: {{festival.FestivalBaslamaTarihi}}<br>
-    Festival Bitis Tarihi: {{festival.FestivalBitisTarihi}}<br>
-    Festival Aciklamasi: {{festival.FestivalAciklamasi}}<br>
-    Festival Sehri: {{festival.FestivalBulunduguSehir}}<br>
+    <img class="card-img-top" src={{url_for('static', filename=muzisyen.MuzisyenResmi)}} style="width: auto; height: 600px;" alt="Card image cap">
+    Muzisyen Adi: {{muzisyen.MuzisyenAdi}}<br>
+    Muzisyen Kategorisi: {{muzisyen.MuzisyenKategorisi}}<br>
   </div>
   {% endfor %}
 {% endblock %}
