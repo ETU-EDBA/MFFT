@@ -85,6 +85,12 @@ def hello_world():
 
     return render_template('MainPage.html')
 
+@app.route('/festivals/<input>')
+def route_fest3(input):
+    print('input'+input)
+    festivals = Festival.query\
+            .filter(Festival.FestivalAdi == input)
+    return render_template('Festivals.html',festivals = festivals)
 
 @app.route('/festivals')
 def route_fest2():
