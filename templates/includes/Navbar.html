@@ -27,8 +27,14 @@
           <button class="dropdown-item btn btn-outline-info my-2 my-sm-0" onclick="location.reload();location.href='/kategoriler/' + $('#searchValue').val()" id="searchButton"type="submit">Kategori Ara</button>
         </div>
       </div>
+      
+      <li class="navbar-nav dropdown">
+        <a class="btn btn-outline-primary "onclick="location.reload();location.href='/profil'">Profil</a>
+      </li>
+
     <li class="navbar-nav dropdown">
-      <a class="btn btn-outline-primary "onclick="document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';window.location = '/';">Kullanıcı</a>
+      <a class="btn btn-outline-primary "onclick="document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';window.location = '/';">Çıkış Yap</a>
     </li>
+
   </div>
 </nav>
