@@ -2,35 +2,23 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from jinja2 import Template
+from datetime import datetime
 app = Flask(__name__, static_url_path='/static')
 #Temporary db information
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://kitmfcqydctwdp:2ccac3a43a66c7a875f549659b949bf5fb2230902abb3581e87c70cb5108e5d5@ec2-54-75-231-3.eu-west-1.compute.amazonaws.com:5432/d4kvinmlpmn77t'
+##This is not the real db uri
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://nyuwsehiydlwgr:f6faba7b204216a22429a544ffa86e7ea8e58dc8e39eb802b8bcde368c9fb9b3@ec2-54-246-85-234.eu-west-1.compute.amazonaws.com:5432/dcq5426gqaegrs'
 db = SQLAlchemy(app)
 
 
-class Muzisyen(db.Model):
-    __tablename__ = 'Muzisyen'
 
-    MuzisyenId = db.Column('MuzisyenId', db.Integer, primary_key = True)
-    MuzisyenAdi = db.Column(db.String(200))
-    MuzisyenResmi = db.Column(db.String(200))
-    MuzisyenKategorileri = db.relationship('MuzikKategorisi', backref='Muzisyen', lazy=True)
-    MuzisyenSahneAlma= db.relationship('Festival', secondary='SahneAlma')
-
-    def __init__(self, adi, resmi):
-        self.MuzisyenAdi = adi
-        self.MuzisyenResmi = resmi
-
-class SahneAlma(db.Model):
-
-    __tablename__='SahneAlma'
-    SahneAlmaId = db.Column( db.Integer, primary_key = True)
-    SahneAlmaMuzisyenId = db.Column('MuzisyenId', db.Integer, db.ForeignKey('Muzisyen.MuzisyenId'))
-    SahneAlmaFestivalId = db.Column('FestivalId', db.Integer, db.ForeignKey('Festival.FestivalId'))
-    def __init__(self, muzisyenid, festivalid):
-        self.SahneAlmaMuzisyenId=muzisyenid
-        self.SahneAlmaFestivalId=festivalid
-
+SahneAlma = db.Table('SahneAlma',
+    db.Column('SahneAlmaFestivalId',db.Integer, db.ForeignKey('Festival.FestivalId'), nullable=False,primary_key=True),
+    db.Column('SahneAlmaMuzisyenId', db.Integer, db.ForeignKey('Muzisyen.MuzisyenId'), nullable=False,primary_key=True)
+)
+#class SahneAlma(db.Model):
+#    __tablename__ = 'SahneAlma'
+#    SahneAlmaFestivalId = db.Column(db.Integer, db.ForeignKey(Festival.FestivalId), nullable=False,primary_key=True, lazy=True)
+#    SahneAlmaMuzisyenId = db.Column( db.Integer, db.ForeignKey(muzisyen.MuzisyenId), nullable=False,primary_key=True, lazy=True)
 class Festival(db.Model):
   __tablename__ = 'Festival'
   FestivalId = db.Column( db.Integer, primary_key = True)
@@ -38,100 +26,59 @@ class Festival(db.Model):
   FestivalAfisi = db.Column(db.String(400))
   FestivalAdresi = db.Column(db.String(200))
   FestivalBaslamaTarihi = db.Column(db.DateTime)
+  FestivalBitisTarihi = db.Column(db.DateTime)
   FestivalAciklamasi = db.Column(db.String(400))
   FestivalBulunduguSehir = db.Column(db.String(50))
-  FestivalSahneAlma=db.relationship('Muzisyen', secondary='SahneAlma')
-  #FestivalIslemOzetleri = db.relationship('IslemOzeti', backref='Festival', lazy=True)
-  FestivalBiletleri = db.relationship('Bilet')
+  FestivalBiletleri = db.relationship('Bilet', backref='festival', lazy=True)
+  FestivalSahneAlma = db.relationship('Muzisyen', secondary=SahneAlma, backref='festival',lazy=True)
 
-
-  def __init__(self, adi, afisi, adresi, baslamaTarihi, aciklamasi, bulunduguSehir):
-      self.FestivalAdi = adi
-      self.FestivalAfisi = afisi
-      self.FestivalAdresi = adresi
-      self.FestivalBaslamaTarihi = baslamaTarihi
-      self.FestivalAciklamasi = aciklamasi
-      self.FestivalBulunduguSehir = bulunduguSehir
+class Muzisyen(db.Model):
+    __tablename__ = 'Muzisyen'
+    MuzisyenId = db.Column('MuzisyenId', db.Integer, primary_key = True)
+    MuzisyenAdi = db.Column(db.String(200))
+    MuzisyenResmi = db.Column(db.String(200))
+    MuzisyenKategori = db.Column(db.String(200))
 
 class Bilet(db.Model):
     __tablename__ = 'Bilet'
-
     BiletId = db.Column( db.Integer, primary_key = True)
     BiletAdi = db.Column(db.String(100))
     BiletFiyati = db.Column(db.Integer)
-    BiletFestivalId = db.Column(db.Integer, db.ForeignKey('Festival.FestivalId'))
+    BiletFestivalId = db.Column(db.Integer, db.ForeignKey('Festival.FestivalId'), nullable=False)
     KalanBiletSayisi = db.Column(db.Integer)
-    BiletIslemOzetleri = db.relationship('IslemOzeti')
+    BiletIslemOzetleri = db.relationship('IslemOzeti', backref='bilet', lazy=True)
 
-
-    def __init__(self, adi, fiyati, festival, kalanbilet):
-      self.BiletAdi = adi
-      self.BiletFiyati = fiyati
-      self.FestivalId = festival
-      self.KalanBiletSayisi = kalanbilet
-
-
-class Kullanici(db.Model):
-    __tablename__ = 'Kullanici'
-
-    KullaniciId = db.Column('KullaniciId', db.Integer, primary_key = True)
-    KullaniciEmail = db.Column(db.String(100))
-    KullaniciSifre = db.Column(db.String(50))
-    KullaniciAdi = db.Column(db.String(50))
-    KullaniciAdresi = db.Column(db.String(200))
-    KullaniciBakiyesi = db.Column(db.Integer)
-    KullaniciTuru = db.Column(db.String(50))
-    KullaniciIslemOzetleri = db.relationship('IslemOzeti')
-
-    def __init__(self, email, sifre, adi, adresi, bakiyesi, turu):
-      self.KullaniciEmail = email
-      self.KullaniciSifre = sifre
-      self.KullaniciAdi = adi
-      self.KullaniciAdresi = adresi
-      self.KullaniciBakiyesi = bakiyesi
-      self.KullaniciTuru = turu
 
 class IslemOzeti(db.Model):
     __tablename__ = 'IslemOzeti'
-
     IslemId = db.Column('IslemId', db.Integer, primary_key = True)
-    IslemPNR = db.Column(db.String(20))
+    IslemPNR = db.Column(db.String(20), unique=True, nullable=False)
     IslemTarihi = db.Column(db.DateTime)
-    IslemKullaniciId = db.Column(db.Integer, db.ForeignKey('Kullanici.KullaniciId'))
-    IslemBiletId = db.Column(db.Integer, db.ForeignKey('Bilet.BiletId'))
-    #IslemFestivalId = db.Column(db.Integer, db.ForeignKey('Festival.FestivalId'))
+    IslemBiletId = db.Column(db.Integer, db.ForeignKey('Bilet.BiletId'),nullable=False)
+    IslemKullaniciId = db.Column(db.Integer, db.ForeignKey('Kullanici.KullaniciId'),nullable=False)
 
-
-    def __init__(self, pnr, islemtarihi, biletid, kullaniciid, festivalid):
-        self.IslemPNR = pnr
-        self.IslemTarihi = islemtarihi
-        self.BiletId = biletid
-        self.KullaniciId = kullaniciid
-        self.FestivalId = festivalid
-
-class MuzikKategorisi(db.Model):
-    __tablename__ = 'MuzikKategorisi'
-    KategoriId= db.Column('KategoriId', db.Integer, primary_key = True)
-    KategoriAdi = db.Column('KategoriAdi', db.String(50))
-    MuzikMuzisyenId = db.Column(db.Integer, db.ForeignKey('Muzisyen.MuzisyenId'))
-
-    def __init__(self, kategoriAdi, muzisyen):
-      self.KategoriAdi = name
-      self.MuzisyenId = muzisyen
+class Kullanici(db.Model):
+    __tablename__ = 'Kullanici'
+    KullaniciId = db.Column('KullaniciId', db.Integer, primary_key = True)
+    KullaniciEmail = db.Column(db.String(100), unique=True, nullable=False)
+    KullaniciSifre = db.Column(db.String(50),nullable=False)
+    KullaniciAdi = db.Column(db.String(50),unique=True)
+    KullaniciAdresi = db.Column(db.String(200))
+    KullaniciBakiyesi = db.Column(db.Integer)
+    KullaniciTuru = db.Column(db.String(50))
+    KullaniciIslemOzetleri = db.relationship('IslemOzeti',backref='kullanici', lazy=True)
 
 @app.route('/')
 def hello_world():
-    muzi=Muzisyen("asli","")
-    db.sessionn.add(muzi)
-    db.session.commit()
-          #veritabanlarini olusturur.
-    #fest#ival1=Festival("adı","111","adb","1","ehg","dhdhg")
-    #db.sessionn.add(festival1)
+    #muzisyen1 = Muzisyen(MuzisyenAdi = 'abc', MuzisyenResmi = 'abc', MuzisyenKategori = 'abc')
+    #kullanici1 = Kullanici(KullaniciEmail = 'abc', KullaniciSifre = 'abc', KullaniciAdi = 'abc', KullaniciAdresi = 'abc', KullaniciBakiyesi = 5  , KullaniciTuru = 'abc')
+    #festival1 = Festival(FestivalAdi = 'asbd', FestivalAfisi = 'asbd', FestivalAdresi = 'ashgdj', FestivalBaslamaTarihi = datetime.now()  , FestivalBitisTarihi = datetime.now(), FestivalAciklamasi = 'ashdgj', FestivalBulunduguSehir = 'asdhgj')
+    #db.session.add(muzisyen1)
+    #db.session.add(kullanici1)
+    #db.session.add(festival1)
     #db.session.commit()
 
-    #newUser=students("burak@gmail.com","12345","Burak","Ankara", 0, "Normal")   #Yeni kullanici objesi olusturur.
-    #db.session.add(newUser) #Bu student objesini veritabanina ekler
-    #db.session.commit()    #Veritabanina bu degisiklikleri commitler
+    #db.create_all() #veritabanlarini olusturur.
 
     return render_template('MainPage.html')
 
