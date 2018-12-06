@@ -77,6 +77,8 @@ def hello_world():
     #db.session.add(muzisyen1)
     #db.session.add(kullanici1)
     #db.session.add(festival1)
+    #muzisyen1 = Muzisyen(MuzisyenAdi = 'Tarkan', MuzisyenResmi = 'Tarkan.jpg', MuzisyenKategori = 'Pop')
+    #db.session.add(muzisyen1)
     #db.session.commit()
 
 
@@ -96,3 +98,16 @@ def route_fest(id):
             .filter(Festival.FestivalId == id)
 
     return render_template('Festival.html', festivals = festivals )
+
+@app.route('/muzisyenler')
+def route_muz1():
+    muzisyenler = Muzisyen.query.all()
+    return render_template('muzisyenler.html',muzisyenler = muzisyenler)
+
+
+@app.route('/muzisyen/<id>')
+def route_muz2(id):
+    muzisyenler = Muzisyen.query\
+            .filter(Muzisyen.MuzisyenId == id)
+
+    return render_template('muzisyen.html', muzisyenler = muzisyenler )
