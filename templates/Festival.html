@@ -9,7 +9,15 @@
     Festival Baslama Tarihi: {{festival.FestivalBaslamaTarihi}}<br>
     Festival Bitis Tarihi: {{festival.FestivalBitisTarihi}}<br>
     Festival Aciklamasi: {{festival.FestivalAciklamasi}}<br>
-    Festival Sehri: {{festival.FestivalBulunduguSehir}}<br>
+    Festival Sehri: {{festival.FestivalBulunduguSehir}}<br><br>
+
+    {% for bilet in biletler %}
+      Bilet Adi: {{bilet.BiletAdi}}<br>
+      Bilet Fiyatı: {{bilet.BiletFiyati}}<br>
+      Kalan Bilet Sayisi: {{bilet.KalanBiletSayisi}}<br>
+      <a href="/satinal/{{bilet.BiletId}}" id="go_to_bilet_button" value={{bilet.BiletId}} class="btn btn-primary">Bu Bileti Satın Al</a>
+    {% endfor %}
   </div>
   {% endfor %}
+
 {% endblock %}

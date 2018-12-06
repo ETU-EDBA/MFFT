@@ -108,8 +108,9 @@ def route_fest2():
 def route_fest(id):
     festivals = Festival.query\
             .filter(Festival.FestivalId == id)
-
-    return render_template('Festival.html', festivals = festivals )
+    biletler = Bilet.query\
+            .filter(Bilet.BiletFestivalId == id)
+    return render_template('Festival.html', festivals = festivals, biletler = biletler )
 
 @app.route('/muzisyenler')
 def route_muz1():
