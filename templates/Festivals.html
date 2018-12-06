@@ -1,7 +1,7 @@
 {% extends 'Layout.html' %}
 
 {% block body %}
-{% for festival in festivals %}
+  {% for festival in festivals %}
       <li class="list-group-item">
         <div class="card col-md-12" >
           <img class="card-img-top" src={{url_for('static', filename=festival.FestivalAfisi)}} alt="Card image cap">

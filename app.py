@@ -83,8 +83,8 @@ def hello_world():
     return render_template('MainPage.html')
 
 
-@app.route('/festivals/<id>')
-def route_fest2(id):
+@app.route('/festivals')
+def route_fest2():
     return render_template('Festivals.html')
 
 @app.route('/festival/<id>')
