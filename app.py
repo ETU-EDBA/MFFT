@@ -6,7 +6,7 @@ from datetime import datetime
 app = Flask(__name__, static_url_path='/static')
 #Temporary db information
 ##This is not the real db uri
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://nyuwsehiydlwgr:f6faba7b204216a22429a544ffa86e7ea8e58dc8e39eb802b8bcde368c9fb9b3@ec2-54-246-85-234.eu-west-1.compute.amazonaws.com:5432/dcq5426gqaegrs'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gqntjjrecxrcdo:29cb95ba43e52116977889413dfaa087694850ee8b5600581cb28c99b075c967@ec2-54-228-197-249.eu-west-1.compute.amazonaws.com:5432/d1j7smdboqmtjs'
 db = SQLAlchemy(app)
 
 
@@ -52,7 +52,7 @@ class Bilet(db.Model):
 class IslemOzeti(db.Model):
     __tablename__ = 'IslemOzeti'
     IslemId = db.Column('IslemId', db.Integer, primary_key = True)
-    IslemPNR = db.Column(db.String(20), unique=True, nullable=False)
+    IslemPNR = db.Column(db.String(20),nullable=False)
     IslemTarihi = db.Column(db.DateTime)
     IslemBiletId = db.Column(db.Integer, db.ForeignKey('Bilet.BiletId'),nullable=False)
     IslemKullaniciId = db.Column(db.Integer, db.ForeignKey('Kullanici.KullaniciId'),nullable=False)
