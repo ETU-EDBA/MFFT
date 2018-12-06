@@ -1,0 +1,17 @@
+{% extends 'Layout.html' %}
+
+{% block body %}
+  {% for festival in festivals %}
+      <li class="list-group-item">
+        <div class="card col-md-12" >
+          <img class="card-img-top" src={{url_for('static', filename=festival.FestivalAfisi)}} alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">Date: {{festival.FestivalBaslamaTarihi}}</p>
+            <a href="/festival/{{festival.FestivalId}}" id="go_to_photo_button" value={{festival.FestivalId}} class="btn btn-primary">Festivali detayli görüntüle</a>
+            <br><hr><br>
+          </div>
+        </div>
+      </li>
+  {% endfor %}
+
+{% endblock %}
