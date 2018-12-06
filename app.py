@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from jinja2 import Template
 from datetime import datetime
+from sqlalchemy.orm.exc import NoResultFound
 app = Flask(__name__, static_url_path='/static')
 #Temporary db information
 ##This is not the real db uri
@@ -87,10 +88,15 @@ def hello_world():
 
 @app.route('/festivals/<input>')
 def route_fest3(input):
-    print('input'+input)
-    festivals = Festival.query\
-            .filter(Festival.FestivalAdi == input)
-    return render_template('Festivals.html',festivals = festivals)
+        festivals = Festival.query\
+                .filter(Festival.FestivalAdi == input)
+        xxx = Festival.query\
+                .filter(Festival.FestivalAdi == input).count()
+        if xxx == 0:
+            return render_template('bulamadik.html')
+        else:
+            return render_template('Festivals.html',festivals = festivals)
+
 
 @app.route('/festivals')
 def route_fest2():
@@ -120,9 +126,11 @@ def route_muz2(id):
 
 @app.route('/muzisyenler/<input>')
 def route_muz3(input):
-    print('input'+input)
-    muzisyenler = Muzisyen.query\
-            .filter(Muzisyen.MuzisyenAdi == input)
-    return render_template('muzisyenler.html',muzisyenler = muzisyenler)
-
-    return render_template('muzisyen.html', muzisyenler = muzisyenler )
+        muzisyenler = Muzisyen.query\
+                .filter(Muzisyen.MuzisyenAdi == input)
+        xxx = Muzisyen.query\
+                .filter(Muzisyen.MuzisyenAdi == input).count()
+        if xxx == 0:
+            return render_template('bulamadik.html')
+        else:
+            return render_template('muzisyenler.html',muzisyenler = muzisyenler)
