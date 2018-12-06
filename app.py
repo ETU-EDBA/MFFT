@@ -70,9 +70,9 @@ class Kullanici(db.Model):
 
 @app.route('/')
 def hello_world():
-    #muzisyen1 = Muzisyen(MuzisyenAdi = 'abc', MuzisyenResmi = 'abc', MuzisyenKategori = 'abc')
-    #kullanici1 = Kullanici(KullaniciEmail = 'abc', KullaniciSifre = 'abc', KullaniciAdi = 'abc', KullaniciAdresi = 'abc', KullaniciBakiyesi = 5  , KullaniciTuru = 'abc')
-    #festival1 = Festival(FestivalAdi = 'asbd', FestivalAfisi = 'asbd', FestivalAdresi = 'ashgdj', FestivalBaslamaTarihi = datetime.now()  , FestivalBitisTarihi = datetime.now(), FestivalAciklamasi = 'ashdgj', FestivalBulunduguSehir = 'asdhgj')
+    #muzisyen1 = Muzisyen(MuzisyenAdi = 'cohen', MuzisyenResmi = 'yk', MuzisyenKategori = 'slow')
+    #kullanici1 = Kullanici(KullaniciEmail = 'asli', KullaniciSifre = 'qwe', KullaniciAdi = 'asli', KullaniciAdresi = 'abc', KullaniciBakiyesi = 3  , KullaniciTuru = 'yıkık')
+    #festival1 = Festival(FestivalAdi = 'bilmem', FestivalAfisi = '/static/festival.jpg', FestivalAdresi = 'tobb', FestivalBaslamaTarihi = datetime.now()  , FestivalBitisTarihi = datetime.now(), FestivalAciklamasi = 'ashdgj', FestivalBulunduguSehir = 'asdhgj')
     #db.session.add(muzisyen1)
     #db.session.add(kullanici1)
     #db.session.add(festival1)
@@ -85,7 +85,9 @@ def hello_world():
 
 @app.route('/festivals')
 def route_fest2():
-    return render_template('Festivals.html')
+    festivals = Festival.query.all()
+            #.filter(Festival.FestivalId == id)
+    return render_template('Festivals.html',festivals = festivals)
 
 @app.route('/festival/<id>')
 def route_fest(id):
