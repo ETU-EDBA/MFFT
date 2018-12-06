@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+
 {% extends 'Layout.html' %}
 
 {% block body %}
@@ -12,12 +19,19 @@
     Festival Sehri: {{festival.FestivalBulunduguSehir}}<br><br>
 
     {% for bilet in biletler %}
+    <div style ="  background-color: white;
+      width: 300px;
+      border: 10px solid blue;
+      padding: 25px;
+      margin: 25px;">
       Bilet Adi: {{bilet.BiletAdi}}<br>
       Bilet Fiyatı: {{bilet.BiletFiyati}}<br>
       Kalan Bilet Sayisi: {{bilet.KalanBiletSayisi}}<br>
       <a href="/satinal/{{bilet.BiletId}}" id="go_to_bilet_button" value={{bilet.BiletId}} class="btn btn-primary">Bu Bileti Satın Al</a>
+      </div>
     {% endfor %}
   </div>
   {% endfor %}
-
 {% endblock %}
+</body>
+</html>
