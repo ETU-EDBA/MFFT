@@ -4,6 +4,8 @@ from flask_marshmallow import Marshmallow
 from jinja2 import Template
 from datetime import datetime
 from sqlalchemy.orm.exc import NoResultFound
+import string
+import random
 app = Flask(__name__, static_url_path='/static')
 #Temporary db information
 ##This is not the real db uri
@@ -79,7 +81,8 @@ def hello_world():
     #db.session.add(kullanici1)
     #db.session.add(festival1)
     #muzisyen1 = Muzisyen(MuzisyenAdi = 'Tarkan', MuzisyenResmi = 'Tarkan.jpg', MuzisyenKategori = 'Pop')
-    #db.session.add(muzisyen1)
+    #bilet1=Bilet(BiletAdi='VIP', BiletFiyati=1000,BiletFestivalId=1,KalanBiletSayisi=100)
+    #db.session.add(bilet1)
     #db.session.commit()
 
 
@@ -104,7 +107,17 @@ def route_islemozeti(id):
         .filter(Kullanici.KullaniciId==1).first()
     festival = Festival.query\
         .filter(Festival.FestivalId == bilet.BiletFestivalId).first()
-    return render_template('IslemOzeti.html',bilet = bilet,kullanici=kullanici,festival=festival)
+    kalanBakiye = kullanici.KullaniciBakiyesi - bilet.BiletFiyati
+    if kalanBakiye < 0 or bilet.KalanBiletSayisi < 1:
+        return render_template('bulamadik.html')
+    else:
+         bilet.KalanBiletSayisi = bilet.KalanBiletSayisi - 1
+         kullanici.KullaniciBakiyesi = kalanBakiye
+         pnr = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+         islemozeti = IslemOzeti(IslemPNR=pnr,IslemTarihi= datetime.now(),IslemBiletId=bilet.BiletId,IslemKullaniciId=kullanici.KullaniciId)
+         db.session.add(islemozeti)
+         db.session.commit()
+         return render_template('IslemOzeti.html',bilet = bilet, kullanici = kullanici, festival = festival, islemozeti=islemozeti)
 
 @app.route('/festivals/<input>')
 def route_fest3(input):
