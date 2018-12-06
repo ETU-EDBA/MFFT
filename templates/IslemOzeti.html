@@ -1,0 +1,17 @@
+{% extends 'Layout.html' %}
+
+{% block body %}
+  <div class="card col-md-6 offset-md-3">
+    <div class="card">
+      <h5 class="card-header">Alınan Bilet{{festival.FestivalAdi}}</h5>
+      <div class="card-body">
+        <h5 class="card-title"> Bilet Adi: {{bilet.BiletAdi}}</h5>
+        <p class="card-text">Kalan Bakiyeniz :{{kullanici.KullaniciBakiyesi}}</p>
+        <p class="card-text">PNR NO :{{islemozeti.IslemPNR}}</p>
+        <p class="card-text">İşlem Tarihi :{{islemozeti.IslemTarihi}}</p>
+        <p class="card-text">PNR numaranızı göstererek giriş yapabilirsiniz</p>
+        <p class="card-text"><font color="darkblue">İyi Eğlenceleer!</font></p>
+        </div>
+    </div>
+  </div>
+{% endblock %}
