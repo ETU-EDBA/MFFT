@@ -1,0 +1,15 @@
+{% extends 'Layout.html' %}
+
+{% block body %}
+  <div class="card col-md-6 offset-md-3">
+    <div class="card">
+      <h5 class="card-header">Festival Adi: {{festival.FestivalAdi}}</h5>
+      <div class="card-body">
+        <h5 class="card-title">  Bilet Adi: {{bilet.BiletAdi}}</h5>
+        <p class="card-text">Bilet Fiyati: {{bilet.BiletFiyati}}</p>
+        <p class="card-text">Bakiyeniz :{{kullanici.KullaniciBakiyesi}}</p>
+        <a href="#" class="btn btn-primary">Ödeme Yap</a>
+        </div>
+    </div>
+  </div>
+{% endblock %}
