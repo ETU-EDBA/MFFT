@@ -17,7 +17,16 @@
       </li>
     </ul>
       <input class="form-control mr-sm-2" type="search" id="searchValue" placeholder="Festival Ara" aria-label="Search">
-      <button class="btn btn-outline-info my-2 my-sm-0" onclick="location.reload();location.href='/festivals/' + $('#searchValue').val()" id="searchButton"type="submit">Ara</button>
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Ara
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item btn btn-outline-info my-2 my-sm-0" onclick="location.reload();location.href='/festivals/' + $('#searchValue').val()" id="searchButton"type="submit">Festival Ara</button>
+          <button class="dropdown-item btn btn-outline-info my-2 my-sm-0" onclick="location.reload();location.href='/muzisyenler/' + $('#searchValue').val()" id="searchButton"type="submit">Muzisyen Ara</button>
+          <button class="dropdown-item btn btn-outline-info my-2 my-sm-0" onclick="location.reload();location.href='/kategoriler/' + $('#searchValue').val()" id="searchButton"type="submit">Kategori Ara</button>
+        </div>
+      </div>
     <li class="navbar-nav dropdown">
       <a class="btn btn-outline-primary "onclick="document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';window.location = '/';">Kullanıcı</a>
     </li>
