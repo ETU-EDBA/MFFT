@@ -137,6 +137,17 @@ def route_fest2():
             #.filter(Festival.FestivalId == id)
     return render_template('Festivals.html',festivals = festivals)
 
+@app.route('/islemozetigoruntule/<id>')
+def route_ioGoruntule(id):
+    islemozeti = IslemOzeti.query\
+            .filter(IslemOzeti.IslemId == id).first()
+    bilet = Bilet.query\
+            .filter(Bilet.BiletId == islemozeti.IslemBiletId).first()
+    kullanici = Kullanici.query\
+            .filter(Kullanici.KullaniciId == islemozeti.IslemKullaniciId).first()
+    festival = Festival.query\
+            .filter(Festival.FestivalId == bilet.BiletFestivalId).first()
+    return render_template('islemOzetiGoruntule.html',festival = festival,islemozeti=islemozeti,bilet=bilet,kullanici=kullanici)
 @app.route('/profil')
 def route_pro1():
     kullanici = Kullanici.query\
