@@ -115,5 +115,14 @@ def route_muz1():
 def route_muz2(id):
     muzisyenler = Muzisyen.query\
             .filter(Muzisyen.MuzisyenId == id)
+    return render_template('muzisyen.html',muzisyenler = muzisyenler)
+
+
+@app.route('/muzisyenler/<input>')
+def route_muz3(input):
+    print('input'+input)
+    muzisyenler = Muzisyen.query\
+            .filter(Muzisyen.MuzisyenAdi == input)
+    return render_template('muzisyenler.html',muzisyenler = muzisyenler)
 
     return render_template('muzisyen.html', muzisyenler = muzisyenler )
