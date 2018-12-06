@@ -86,16 +86,26 @@ def hello_world():
 
     return render_template('MainPage.html')
 
+@app.route('/satinalma/<id>')
+def route_satinalma(id):
+    bilet = Bilet.query\
+        .filter(Bilet.BiletId == id)
+    festival = Festival.query\
+        .filter(Festival.FestivalId == bilet.BiletFestivalId)
+    kullanici = Kullanici.query\
+        .filter(Kullanici.KullaniciId==id)
+    return render_template('SatinAlma.html',bilet = bilet,kullanici=kullanici,festival=festival)
+
 @app.route('/festivals/<input>')
 def route_fest3(input):
-        festivals = Festival.query\
-                .filter(Festival.FestivalAdi == input)
-        xxx = Festival.query\
-                .filter(Festival.FestivalAdi == input).count()
-        if xxx == 0:
-            return render_template('bulamadik.html')
-        else:
-            return render_template('Festivals.html',festivals = festivals)
+    festivals = Festival.query\
+            .filter(Festival.FestivalAdi == input)
+    xxx = Festival.query\
+            .filter(Festival.FestivalAdi == input).count()
+    if xxx == 0:
+        return render_template('bulamadik.html')
+    else:
+        return render_template('Festivals.html',festivals = festivals)
 
 
 @app.route('/festivals')
@@ -127,11 +137,11 @@ def route_muz2(id):
 
 @app.route('/muzisyenler/<input>')
 def route_muz3(input):
-        muzisyenler = Muzisyen.query\
-                .filter(Muzisyen.MuzisyenAdi == input)
-        xxx = Muzisyen.query\
-                .filter(Muzisyen.MuzisyenAdi == input).count()
-        if xxx == 0:
-            return render_template('bulamadik.html')
-        else:
-            return render_template('muzisyenler.html',muzisyenler = muzisyenler)
+    muzisyenler = Muzisyen.query\
+            .filter(Muzisyen.MuzisyenAdi == input)
+    xxx = Muzisyen.query\
+            .filter(Muzisyen.MuzisyenAdi == input).count()
+    if xxx == 0:
+        return render_template('bulamadik.html')
+    else:
+        return render_template('muzisyenler.html',muzisyenler = muzisyenler)
