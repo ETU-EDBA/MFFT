@@ -86,12 +86,14 @@ def hello_world():
 
     return render_template('MainPage.html')
 
-@app.route('/satinalma/<id>')
+@app.route('/satinal/<id>')
 def route_satinalma(id):
     bilet = Bilet.query\
-        .filter(Bilet.BiletId == id)
+        .filter(Bilet.BiletId == id).first()
+    festId = bilet.BiletFestivalId
+    #festId = Bilet.query.filter_by(Bilet.BiletId == id).first()
     festival = Festival.query\
-        .filter(Festival.FestivalId == bilet.BiletFestivalId)
+        .filter(Festival.FestivalId == festId)
     kullanici = Kullanici.query\
         .filter(Kullanici.KullaniciId==id)
     return render_template('SatinAlma.html',bilet = bilet,kullanici=kullanici,festival=festival)
