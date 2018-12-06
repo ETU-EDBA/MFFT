@@ -1,0 +1,20 @@
+{% extends 'Layout.html' %}
+
+{% block body %}
+<div class="card">
+  <div class="card-header">
+    {{kullanici.KullaniciAdi}}
+
+  </div>
+  <div class="card-body">
+    <blockquote class="blockquote mb-0">
+      <p class="card-text">Festival Adı: {{festival.FestivalAdi}}</p><br>
+      <p class="card-text">Festival Başlama Tarihi: {{festival.FestivalBaslamaTarihi}}</p><br>
+      <p class="card-text">Bilet Adi: {{bilet.BiletAdi}}</p><br>
+      <p class="card-text">PNR NO :{{islemozeti.IslemPNR}}</p><br>
+      <p class="card-text">İşlem Tarihi :{{islemozeti.IslemTarihi}}</p><br>
+      <footer class="blockquote-footer">İyi Eğlenceleeeer <cite title="Source Title">by MFFT</cite></footer>
+    </blockquote>
+  </div>
+</div>
+{% endblock %}
