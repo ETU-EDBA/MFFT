@@ -1,11 +1,15 @@
 {% extends 'Layout.html' %}
 
 {% block body %}
-
-<div class="card col-md-6 offset-md-3">
-  <img class="card-img-top" src="/static/festival.jpg" style="width: auto; height: 600px;" alt="Card image cap">
-  <p class="card-text">Tarihi : 25 Kasım Cumartesi</p>
-
-</div>
-
+  {% for festival in festivals %}
+  <div class="card col-md-6 offset-md-3">
+    <img class="card-img-top" src={{url_for('static', filename=festival.FestivalAfisi)}} style="width: auto; height: 600px;" alt="Card image cap">
+    Festival: {{festival.FestivalAdi}}<br>
+    Festival Adresi: {{festival.FestivalAdresi}}<br>
+    Festival Baslama Tarihi: {{festival.FestivalBaslamaTarihi}}<br>
+    Festival Bitis Tarihi: {{festival.FestivalBitisTarihi}}<br>
+    Festival Aciklamasi: {{festival.FestivalAciklamasi}}<br>
+    Festival Sehri: {{festival.FestivalBulunduguSehir}}<br>
+  </div>
+  {% endfor %}
 {% endblock %}

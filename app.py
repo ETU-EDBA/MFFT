@@ -72,7 +72,7 @@ class Kullanici(db.Model):
 def hello_world():
     #db.create_all() #veritabanlarini olusturur.
     #muzisyen1 = Muzisyen(MuzisyenAdi = 'cohen', MuzisyenResmi = 'yk', MuzisyenKategori = 'slow')
-    #kullanici1 = Kullanici(KullaniciEmail = 'asli', KullaniciSifre = 'qwe', KullaniciAdi = 'asli', KullaniciAdresi = 'abc', KullaniciBakiyesi = 3  , KullaniciTuru = 'yıkık')
+    #kullanici1 = Kullanici(KullaniciEmail = 'asli', KullaniciSifre = 'qwe', KullaniciAdi = 'asli', KullaniciAdresi = 'abc', KullaniciBakiyesi = 3  , KullaniciTuru = 'yikik')
     #festival1 = Festival(FestivalAdi = 'JAZZ festival', FestivalAfisi = 'fest1.jpg', FestivalAdresi = 'istanbul', FestivalBaslamaTarihi = datetime.now()  , FestivalBitisTarihi = datetime.now(), FestivalAciklamasi = 'ol', FestivalBulunduguSehir = 'ist')
     #db.session.add(muzisyen1)
     #db.session.add(kullanici1)
