@@ -137,6 +137,14 @@ def route_fest2():
             #.filter(Festival.FestivalId == id)
     return render_template('Festivals.html',festivals = festivals)
 
+@app.route('/profil')
+def route_pro1():
+    kullanici = Kullanici.query\
+            .filter(Kullanici.KullaniciId == 1).first()
+    islemozetleri = IslemOzeti.query\
+            .filter(IslemOzeti.IslemKullaniciId == 1)
+    return render_template('Profil.html',kullanici = kullanici,islemozetleri=islemozetleri)
+
 @app.route('/festival/<id>')
 def route_fest(id):
     festivals = Festival.query\
