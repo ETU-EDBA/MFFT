@@ -70,15 +70,16 @@ class Kullanici(db.Model):
 
 @app.route('/')
 def hello_world():
+    #db.create_all() #veritabanlarini olusturur.
     #muzisyen1 = Muzisyen(MuzisyenAdi = 'cohen', MuzisyenResmi = 'yk', MuzisyenKategori = 'slow')
     #kullanici1 = Kullanici(KullaniciEmail = 'asli', KullaniciSifre = 'qwe', KullaniciAdi = 'asli', KullaniciAdresi = 'abc', KullaniciBakiyesi = 3  , KullaniciTuru = 'yıkık')
-    #festival1 = Festival(FestivalAdi = 'bilmem', FestivalAfisi = '/static/festival.jpg', FestivalAdresi = 'tobb', FestivalBaslamaTarihi = datetime.now()  , FestivalBitisTarihi = datetime.now(), FestivalAciklamasi = 'ashdgj', FestivalBulunduguSehir = 'asdhgj')
+    #festival1 = Festival(FestivalAdi = 'JAZZ festival', FestivalAfisi = 'fest1.jpg', FestivalAdresi = 'istanbul', FestivalBaslamaTarihi = datetime.now()  , FestivalBitisTarihi = datetime.now(), FestivalAciklamasi = 'ol', FestivalBulunduguSehir = 'ist')
     #db.session.add(muzisyen1)
     #db.session.add(kullanici1)
     #db.session.add(festival1)
     #db.session.commit()
 
-    #db.create_all() #veritabanlarini olusturur.
+
 
     return render_template('MainPage.html')
 
