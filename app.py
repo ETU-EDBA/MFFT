@@ -60,9 +60,9 @@ class IslemOzeti(db.Model):
 class Kullanici(db.Model):
     __tablename__ = 'Kullanici'
     KullaniciId = db.Column('KullaniciId', db.Integer, primary_key = True)
-    KullaniciEmail = db.Column(db.String(100), unique=True, nullable=False)
+    KullaniciEmail = db.Column(db.String(100), nullable=False)
     KullaniciSifre = db.Column(db.String(50),nullable=False)
-    KullaniciAdi = db.Column(db.String(50),unique=True)
+    KullaniciAdi = db.Column(db.String(50))
     KullaniciAdresi = db.Column(db.String(200))
     KullaniciBakiyesi = db.Column(db.Integer)
     KullaniciTuru = db.Column(db.String(50))
