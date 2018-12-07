@@ -10,6 +10,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField
 from wtforms.validators import Email, DataRequired
 
+
 import string
 import random
 app = Flask(__name__, static_url_path='/static')
@@ -21,14 +22,14 @@ db = SQLAlchemy(app)
 
 
 class SignupForm(FlaskForm):
-    email = StringField('email',validators=[DataRequired(),Email()])
-    password = PasswordField('password',validators=[DataRequired()])
-    adi = StringField('adi',validators=[DataRequired()])
-    adresi = StringField('adresi',validators=[DataRequired()])
-    turu = SelectField('turu',choices=[('normal', 'Normal Kullanıcı'), ('festival', 'Festival Kullanıcısı')],validators=[DataRequired()])
+    email = StringField('Email',validators=[DataRequired(),Email()])
+    password = PasswordField('Sifre',validators=[DataRequired()])
+    adi = StringField('Ad',validators=[DataRequired()])
+    adresi = StringField('Adres',validators=[DataRequired()])
+    turu = SelectField('Uyelik Tipi',choices=[('normal', 'Normal Kullanici'), ('festival', 'Festival Kullanici')],validators=[DataRequired()])
 class SigninForm(FlaskForm):
-    email = StringField('email',validators=[DataRequired(),Email()])
-    password = PasswordField('password',validators=[DataRequired()])
+    email = StringField('Email')
+    password = PasswordField('Sifre')
 
 # flask-login
 login_manager = LoginManager()
@@ -177,7 +178,6 @@ def route_fest3(input):
 
 
 @app.route('/festivals')
-@login_required
 def route_fest2():
     festivals = Festival.query.all()
             #.filter(Festival.FestivalId == id)
@@ -237,13 +237,12 @@ def route_muz3(input):
         return render_template('muzisyenler.html',muzisyenler = muzisyenler)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/giris', methods=['GET', 'POST'])
 def login():
     form = SigninForm(request.form)
     if request.method == 'GET':
-        return render_template('login.html', form=form)
+        return render_template('Login.html', form=form)
     elif request.method == 'POST':
-        if form.validate():
             user = Kullanici.query.filter_by(KullaniciEmail=form.email.data).first()
             if user:
                 if user.KullaniciSifre == form.password.data:
@@ -252,37 +251,28 @@ def login():
                     return redirect(next or url_for('main_page'))
                 else:
                     flash('Wrong password')
-                    return redirect("/login")
+                    return redirect("/giris")
             else:
                 flash('user doesnt exist')
-                return redirect("/login")
-        else:
-            flash('form not validated')
-            return redirect("/login")
+                return redirect("/giris")
 
-
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/kayit', methods=['GET', 'POST'])
 def signup():
     form = SignupForm()
     if request.method == 'GET':
-        return render_template('signup.html', form = form)
+        return render_template('Signup.html', form = form)
     elif request.method == 'POST':
-        if form.validate():
             if Kullanici.query.filter_by(KullaniciEmail=form.email.data).first():
                 flash('Email address already exists')
-                return redirect("/signup")
+                return redirect("/kayit")
             else:
                 newuser = Kullanici(form.email.data, form.password.data, form.adi.data, form.adresi.data, form.turu.data)
                 db.session.add(newuser)
                 db.session.commit()
                 login_user(newuser)
                 return redirect("/")
-        else:
-            flash('Form didnt validate')
-            return redirect("/signup")
 
-
-@app.route("/logout")
+@app.route("/cikis")
 def logout():
     logout_user()
     return redirect("/")

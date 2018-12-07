@@ -1,0 +1,35 @@
+{% extends 'LayoutWithoutNavbar.html' %}
+  {% block body %}
+
+    <div class="container col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Lütfen giriş yapın
+        </div>
+        <div class="card-body">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+
+              {% for message in messages %}
+              <div class="flashes alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+              {% endfor %}
+
+            {% endif %}
+          {% endwith %}
+          <form method="POST" action="/giris">
+            <div class="form-group">
+              {{ form.email.label }} {{ form.email(size=20, class_="form-control") }}
+            </div>
+            <div class="form-group">
+              {{ form.password.label }} {{ form.password(size=20, class_="form-control") }}
+            </div>
+            <input class="btn btn-primary"type="submit" value="Giriş Yap">
+            <a class="btn btn-info"href="/kayit">Kayıt Ol</a>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  {% endblock %}

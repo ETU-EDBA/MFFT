@@ -1,0 +1,43 @@
+{% extends 'LayoutWithoutNavbar.html' %}
+  {% block body %}
+
+    <div class="container col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Lütfen giriş yapın
+        </div>
+        <div class="card-body">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+
+              {% for message in messages %}
+              <div class="flashes alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+              {% endfor %}
+
+            {% endif %}
+          {% endwith %}
+          <form method="POST" action="/signup">
+              {{ form.hidden_tag() }}
+              <div class="form-group">
+                {{ form.email.label }} {{ form.email(size=50, class_="form-control") }}
+              </div>
+              <div class="form-group">
+                {{ form.password.label }} {{ form.password(size=20, class_="form-control") }}
+              </div>
+              <div class="form-group">
+                {{ form.adresi.label }} {{ form.adresi(size=50, class_="form-control") }}
+              </div>
+              <div class="form-group">
+                {{ form.turu.label }} {{ form.turu( class_="form-control") }}
+              </div>
+
+
+              <input class="btn btn-primary" type="submit" value="Kayıt Ol">
+          </form>
+        </div>
+      </div>
+    </div>
+
+  {% endblock %}
