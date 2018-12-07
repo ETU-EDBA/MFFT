@@ -9,6 +9,7 @@ from flask_login import LoginManager, UserMixin, \
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField
 from wtforms.validators import Email, DataRequired
+from sqlalchemy import asc
 
 
 import string
@@ -118,6 +119,9 @@ class Kullanici(db.Model, UserMixin):
 
 @app.route('/')
 def main_page():
+    festivals = Festival.query.order_by(asc(Festival.FestivalBaslamaTarihi)).limit(3).all()
+            #.filter(Festival.FestivalId == id)
+    return render_template('MainPage.html',festivals = festivals)
     #db.create_all() #veritabanlarini olusturur.
     #muzisyen1 = Muzisyen(MuzisyenAdi = 'cohen', MuzisyenResmi = 'yk', MuzisyenKategori = 'slow')
     #kullanici1 = Kullanici(KullaniciEmail = 'asli', KullaniciSifre = 'qwe', KullaniciAdi = 'asli', KullaniciAdresi = 'abc', KullaniciBakiyesi = 3  , KullaniciTuru = 'yikik')
@@ -182,6 +186,9 @@ def route_fest2():
     festivals = Festival.query.all()
             #.filter(Festival.FestivalId == id)
     return render_template('Festivals.html',festivals = festivals)
+
+
+
 
 @app.route('/islemozetigoruntule/<id>')
 def route_ioGoruntule(id):
