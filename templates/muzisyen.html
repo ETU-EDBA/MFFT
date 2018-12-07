@@ -6,6 +6,22 @@
     <img class="card-img-top" src={{url_for('static', filename=muzisyen.MuzisyenResmi)}} style="width: auto; height: 600px;" alt="Card image cap">
     Muzisyen Adi: {{muzisyen.MuzisyenAdi}}<br>
     Muzisyen Kategorisi: {{muzisyen.MuzisyenKategori}}<br>
-  </div>
+
   {% endfor %}
+    Muzisyen Festivalleri: <br>
+    <li class="list-group-item">
+  {% for festival in festivals %}
+
+
+          <div class="card-body">
+            <p class="card-text">Adı: {{festival.FestivalAdi}}</p>
+            <p class="card-text">Tarihi: {{festival.FestivalBaslamaTarihi}}</p>
+            <a href="/festival/{{festival.FestivalId}}" id="go_to_photo_button" value={{festival.FestivalId}} class="btn btn-primary">Festivali detayli görüntüle</a>
+            <br><hr><br>
+          </div>
+
+
+  {% endfor %}
+</li>
+</div>
 {% endblock %}

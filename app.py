@@ -121,6 +121,12 @@ class Kullanici(db.Model, UserMixin):
 def main_page():
     festivals = Festival.query.order_by(asc(Festival.FestivalBaslamaTarihi)).limit(3).all()
             #.filter(Festival.FestivalId == id)
+    #festival = Festival.query\
+    #        .filter(Festival.FestivalId == 1).first()
+    #tarkan = muzisyenler = Muzisyen.query\
+    #        .filter(Muzisyen.MuzisyenId == 1).first()
+    #festival.FestivalSahneAlma.append(tarkan)
+    #db.session.commit()
     return render_template('MainPage.html',festivals = festivals)
     #db.create_all() #veritabanlarini olusturur.
     #muzisyen1 = Muzisyen(MuzisyenAdi = 'cohen', MuzisyenResmi = 'yk', MuzisyenKategori = 'slow')
@@ -213,11 +219,18 @@ def route_pro1():
 
 @app.route('/festival/<id>')
 def route_fest(id):
+    x = 0
+    muzisyenler = []
     festivals = Festival.query\
             .filter(Festival.FestivalId == id)
     biletler = Bilet.query\
             .filter(Bilet.BiletFestivalId == id)
-    return render_template('Festival.html', festivals = festivals, biletler = biletler )
+    sahneAlmalar = db.session.query(SahneAlma).join(Festival).join(Muzisyen).filter(Festival.FestivalId == id).all()
+    for sahnealma in sahneAlmalar:
+        muzisyenler.insert(x,Muzisyen.query\
+            .filter(Muzisyen.MuzisyenId == sahnealma.SahneAlmaMuzisyenId).first())
+        x = x + 1
+    return render_template('Festival.html', festivals = festivals, biletler = biletler,muzisyenler=muzisyenler )
 
 @app.route('/muzisyenler')
 def route_muz1():
@@ -227,9 +240,16 @@ def route_muz1():
 
 @app.route('/muzisyen/<id>')
 def route_muz2(id):
+    x = 0
+    festivals = []
     muzisyenler = Muzisyen.query\
             .filter(Muzisyen.MuzisyenId == id)
-    return render_template('muzisyen.html',muzisyenler = muzisyenler)
+    sahneAlmalar = db.session.query(SahneAlma).join(Festival).join(Muzisyen).filter(Muzisyen.MuzisyenId == id).all()
+    for sahnealma in sahneAlmalar:
+        festivals.insert(x,Festival.query\
+            .filter(Festival.FestivalId == sahnealma.SahneAlmaFestivalId).first())
+        x = x + 1
+    return render_template('muzisyen.html',muzisyenler = muzisyenler,festivals = festivals)
 
 
 @app.route('/muzisyenler/<input>')

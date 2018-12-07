@@ -30,6 +30,19 @@
       <a href="/satinal/{{bilet.BiletId}}" id="go_to_bilet_button" value={{bilet.BiletId}} class="btn btn-primary">Bu Bileti Satın Al</a>
       </div>
     {% endfor %}
+    <br>Müzisyenler:
+    {% for muzisyen in muzisyenler %}
+        <li class="list-group-item">
+          <div class="card col-md-12" >
+            <div class="card-body">
+              <p class="card-text">Adı: {{muzisyen.MuzisyenAdi}}</p>
+              <p class="card-text">Kategori: {{muzisyen.MuzisyenKategori}}</p>
+              <a href="/muzisyen/{{muzisyen.MuzisyenId}}" id="go_to_photo_button" value={{muzisyen.MuzisyenId}} class="btn btn-primary">Muzisyeni detayli görüntüle</a>
+              <br><hr><br>
+            </div>
+          </div>
+        </li>
+    {% endfor %}
   </div>
   {% endfor %}
 {% endblock %}
