@@ -1,0 +1,30 @@
+{% extends 'Layout.html' %}
+  {% block body %}
+
+    <div class="container col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Festivale Müzisyen Ekle
+        </div>
+        <div class="card-body">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+
+              {% for message in messages %}
+              <div class="flashes alert alert-primary" role="alert">
+                {{ message }}
+              </div>
+              {% endfor %}
+
+            {% endif %}
+          {% endwith %}
+          <ul class="list-group">
+            {% for muzisyen in muzisyenlistesi %}
+              <li class="list-group-item"><a class="btn btn-primary" href="/festivalmuzisyenekle/{{festivalid}}/{{muzisyen.MuzisyenId}}">{{muzisyen.MuzisyenAdi}} <span class="badge badge-light">+</span></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  {% endblock %}

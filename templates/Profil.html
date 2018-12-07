@@ -9,7 +9,10 @@
     <h5 class="card-title"><font color="green">@{{kullanici.KullaniciAdi}}</font></h5>
     <p class="card-text">{{kullanici.KullaniciEmail}}</p>
     <p class="card-text">{{kullanici.KullaniciAdresi}}</p>
-    <p class="card-text">Bakiyeniz :{{kullanici.KullaniciBakiyesi}}</p>
+    {% if current_user.is_authenticated and not current_user.KullaniciTuru=='festival'%}
+      <p class="card-text">Bakiyeniz :{{kullanici.KullaniciBakiyesi}}</p>
+    {% endif %}
+
     <p class="card-text"><font color="green">İşlem Özetleri</font></p>
     <br>
       {% for islemozeti in islemozetleri %}
@@ -19,6 +22,15 @@
       <br>
       <br>
       {% endfor %}
+      {% if current_user.is_authenticated and current_user.KullaniciTuru=='festival'%}
+      <h4>Festival Admin Paneli:</h4>
+        <a class="btn btn-primary" href="/muzisyenekle">Muzisyen Ekle</a>
+        <br>
+        <a class="btn btn-primary" href="/festivalekle">Festival Ekle</a>
+        <br>
+        <a class="btn btn-primary" href="/festivalmuzisyenekle">Festivale Müzisyen Ekle</a>
+        <br>
+    {% endif %}
   </div>
 </div>
 </center>

@@ -9,7 +9,7 @@ from flask_login import LoginManager, UserMixin, \
 from flask_wtf import FlaskForm
 from sqlalchemy import asc
 
-from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField, IntegerField
 from wtforms.validators import Email, DataRequired
 from flask_wtf.file import FileField, FileRequired
 from werkzeug.utils import secure_filename
@@ -55,6 +55,13 @@ class FestivalEkle(FlaskForm):
     bitistarihi = StringField('Festival Bitis Tarihi')
     aciklamasi = StringField('Festival Aciklamasi')
     bulundugusehir = StringField('Festivalin Bulundugu Sehir')
+
+class BiletEkle(FlaskForm):
+    adi = StringField('Bilet Adi')
+    fiyati = IntegerField('Bilet Fiyati')
+    biletsayisi = IntegerField('Bilet Sayisi')
+
+
 
 # flask-login
 login_manager = LoginManager()
@@ -114,7 +121,11 @@ class Bilet(db.Model):
     BiletFestivalId = db.Column(db.Integer, db.ForeignKey('Festival.FestivalId'), nullable=False)
     KalanBiletSayisi = db.Column(db.Integer)
     BiletIslemOzetleri = db.relationship('IslemOzeti', backref='bilet', lazy=True)
-
+    def __init__(self, adi, fiyati, festivalid, kalanbilet):
+        self.BiletAdi = adi
+        self.BiletFiyati = fiyati
+        self.BiletFestivalId = festivalid
+        self.KalanBiletSayisi = kalanbilet
 
 class IslemOzeti(db.Model):
     __tablename__ = 'IslemOzeti'
@@ -140,7 +151,7 @@ class Kullanici(db.Model, UserMixin):
         self.KullaniciSifre = sifre
         self.KullaniciAdi = adi
         self.KullaniciAdresi = adresi
-        self.KullaniciBakiyesi = 0
+        self.KullaniciBakiyesi = 10000
         self.KullaniciTuru = turu
 
     def __repr__(self):
@@ -393,3 +404,31 @@ def addSahneAlma(festivalId,muzisyenId):
             .filter(Muzisyen.MuzisyenId == muzisyenId).first()
     festival.FestivalSahneAlma.append(muzisyen)
     db.session.commit()
+
+@app.route('/festivalmuzisyenekle/<id>', methods=['GET', 'POST'])
+def festivalmuzisyenekle(id):
+    muzisyenlistesi=Muzisyen.query.all()
+    if request.method == 'GET':
+        return render_template('FestivalMuzisyenEkle.html', festivalid=id, muzisyenlistesi = muzisyenlistesi)
+
+@app.route('/festivalmuzisyenekle/<id1>/<id2>', methods=['GET', 'POST'])
+def festivalmuzisyenekle2(id1, id2):
+    muzisyenlistesi=Muzisyen.query.all()
+    if request.method == 'GET':
+        addSahneAlma(id1,id2)
+        flash('Festivale muzisyen eklendi.')
+        return render_template('FestivalMuzisyenEkle.html', festivalid=id, muzisyenlistesi = muzisyenlistesi)
+
+
+@app.route('/festivalbiletekle/<id>', methods=['GET', 'POST'])
+def festivalbiletekleroute(id):
+
+    formBilet = BiletEkle(request.form);
+    if request.method == 'GET':
+        return render_template('FestivalBiletEkle.html', form = formBilet, festivalid=id)
+    else:
+        yeniBilet=Bilet(formBilet.adi.data, formBilet.fiyati.data, id, formBilet.biletsayisi.data)
+        db.session.add(yeniBilet)
+        db.session.commit()
+        flash('Festivale bilet eklendi.')
+        return redirect("/festivalbiletekle/"+id)

@@ -43,8 +43,16 @@
           </div>
         </li>
     {% endfor %}
+    {% if current_user.is_authenticated and current_user.KullaniciTuru=='festival'%}
+      <h4>Festival Admin Paneli:</h4>
+        <br>
+        <a class="btn btn-primary" href="/festivalbiletekle/{{festival.FestivalId}}">Festivale Bilet Ekle</a>
+        <br>
+    {% endif %}
   </div>
+
   {% endfor %}
+
 {% endblock %}
 </body>
 </html>

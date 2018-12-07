@@ -7,7 +7,10 @@
       <div class="card-body">
         <h5 class="card-title">  Bilet Adi: {{bilet.BiletAdi}}</h5>
         <p class="card-text">Bilet Fiyati: {{bilet.BiletFiyati}}</p>
-        <p class="card-text">Bakiyeniz :{{kullanici.KullaniciBakiyesi}}</p>
+        {% if current_user.is_authenticated and not current_user.KullaniciTuru=='festival'%}
+          <p class="card-text">Bakiyeniz :{{kullanici.KullaniciBakiyesi}}</p>
+        {% endif %}
+
         <a href="/islemozeti/{{bilet.BiletId}}" id="go_to_bilet_button" value={{bilet.BiletId}} class="btn btn-primary">Ödeme Yap</a>
         </div>
     </div>
