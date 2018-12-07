@@ -14,8 +14,8 @@
     <img class="card-img-top" src={{url_for('static', filename=festival.FestivalAfisi)}} style="width: auto; height: 600px;" alt="Card image cap">
     Festival: {{festival.FestivalAdi}}<br>
     Festival Adresi: {{festival.FestivalAdresi}}<br>
-    Festival Baslama Tarihi: {{festival.FestivalBaslamaTarihi}}<br>
-    Festival Bitis Tarihi: {{festival.FestivalBitisTarihi}}<br>
+    Festival Baslama Tarihi: {{festival.FestivalBaslamaTarihi.strftime('%Y-%m-%d')}}<br>
+    Festival Bitis Tarihi: {{festival.FestivalBitisTarihi.strftime('%Y-%m-%d')}}<br>
     Festival Aciklamasi: {{festival.FestivalAciklamasi}}<br>
     Festival Sehri: {{festival.FestivalBulunduguSehir}}<br><br>
 
@@ -48,6 +48,8 @@
       <h4>Festival Admin Paneli:</h4>
         <br>
         <a class="btn btn-primary" href="/festivalbiletekle/{{festival.FestivalId}}">Festivale Bilet Ekle</a>
+        <br>
+        <a class="btn btn-primary" href="/festivalmuzisyenekle/{{festival.FestivalId}}">Festivale Muzisyen Ekle</a>
         <br>
     {% endif %}
   </div>

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, request, Response, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -16,11 +18,24 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import CombinedMultiDict
 import os
 from os.path import join, dirname, realpath
-
+from flask_mail import Mail, Message
 
 import string
 import random
+
 app = Flask(__name__, static_url_path='/static')
+app.run(threaded=True)
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'etu.edba@gmail.com'
+app.config['MAIL_PASSWORD'] = 'hdks528tt9'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+
+mail = Mail(app)
+mail.init_app(app)
+
 #Temporary db information
 ##This is not the real db uri
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gqntjjrecxrcdo:29cb95ba43e52116977889413dfaa087694850ee8b5600581cb28c99b075c967@ec2-54-228-197-249.eu-west-1.compute.amazonaws.com:5432/d1j7smdboqmtjs'
@@ -224,6 +239,10 @@ def route_islemozeti(id):
          islemozeti = IslemOzeti(IslemPNR=pnr,IslemTarihi= datetime.now(),IslemBiletId=bilet.BiletId,IslemKullaniciId=kullanici.KullaniciId)
          db.session.add(islemozeti)
          db.session.commit()
+         msg = Message('Satın alma pnr kodunuz', sender = 'etu.edba@gmail.com', recipients = [current_user.KullaniciEmail])
+         bodyText = "Merhaba "+current_user.KullaniciAdi+",\nYapmış olduğunuz festival bileti satın alma sonucunda size özel oluşturulmuş PNR kodu aşağıdadır.\nPNR: "+pnr
+         msg.body=bodyText
+         mail.send(msg)
          return render_template('IslemOzeti.html',bilet = bilet, kullanici = kullanici, festival = festival, islemozeti=islemozeti)
 
 @app.route('/festivals/<input>')
