@@ -1,17 +1,39 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, Response, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from jinja2 import Template
 from datetime import datetime
 from sqlalchemy.orm.exc import NoResultFound
+from flask_login import LoginManager, UserMixin, \
+                                login_required, login_user, logout_user, current_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField, SelectField
+from wtforms.validators import Email, DataRequired
+
 import string
 import random
 app = Flask(__name__, static_url_path='/static')
 #Temporary db information
 ##This is not the real db uri
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gqntjjrecxrcdo:29cb95ba43e52116977889413dfaa087694850ee8b5600581cb28c99b075c967@ec2-54-228-197-249.eu-west-1.compute.amazonaws.com:5432/d1j7smdboqmtjs'
+app.config['SECRET_KEY']='secret_xxx';
 db = SQLAlchemy(app)
 
+
+class SignupForm(FlaskForm):
+    email = StringField('email',validators=[DataRequired(),Email()])
+    password = PasswordField('password',validators=[DataRequired()])
+    adi = StringField('adi',validators=[DataRequired()])
+    adresi = StringField('adresi',validators=[DataRequired()])
+    turu = SelectField('turu',choices=[('normal', 'Normal Kullanıcı'), ('festival', 'Festival Kullanıcısı')],validators=[DataRequired()])
+class SigninForm(FlaskForm):
+    email = StringField('email',validators=[DataRequired(),Email()])
+    password = PasswordField('password',validators=[DataRequired()])
+
+# flask-login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
 
 
 SahneAlma = db.Table('SahneAlma',
@@ -60,7 +82,7 @@ class IslemOzeti(db.Model):
     IslemBiletId = db.Column(db.Integer, db.ForeignKey('Bilet.BiletId'),nullable=False)
     IslemKullaniciId = db.Column(db.Integer, db.ForeignKey('Kullanici.KullaniciId'),nullable=False)
 
-class Kullanici(db.Model):
+class Kullanici(db.Model, UserMixin):
     __tablename__ = 'Kullanici'
     KullaniciId = db.Column('KullaniciId', db.Integer, primary_key = True)
     KullaniciEmail = db.Column(db.String(100), nullable=False)
@@ -71,8 +93,30 @@ class Kullanici(db.Model):
     KullaniciTuru = db.Column(db.String(50))
     KullaniciIslemOzetleri = db.relationship('IslemOzeti',backref='kullanici', lazy=True)
 
+    def __init__(self, email, sifre, adi, adresi, turu):
+        self.KullaniciEmail = email
+        self.KullaniciSifre = sifre
+        self.KullaniciAdi = adi
+        self.KullaniciAdresi = adresi
+        self.KullaniciBakiyesi = 0
+        self.KullaniciTuru = turu
+
+    def __repr__(self):
+        return "%s" % self.KullaniciEmail
+
+    def get_id(self):
+           return (self.KullaniciEmail)
+
+    def is_authenticated(self):
+        return True
+    def is_active(self):
+        return True
+    def is_anonymous(self):
+        return False
+
+
 @app.route('/')
-def hello_world():
+def main_page():
     #db.create_all() #veritabanlarini olusturur.
     #muzisyen1 = Muzisyen(MuzisyenAdi = 'cohen', MuzisyenResmi = 'yk', MuzisyenKategori = 'slow')
     #kullanici1 = Kullanici(KullaniciEmail = 'asli', KullaniciSifre = 'qwe', KullaniciAdi = 'asli', KullaniciAdresi = 'abc', KullaniciBakiyesi = 3  , KullaniciTuru = 'yikik')
@@ -90,11 +134,12 @@ def hello_world():
     return render_template('MainPage.html')
 
 @app.route('/satinal/<id>')
+@login_required
 def route_satinalma(id):
     bilet = Bilet.query\
         .filter(Bilet.BiletId == id).first()
     kullanici = Kullanici.query\
-        .filter(Kullanici.KullaniciId==1).first()
+        .filter(Kullanici.KullaniciId==current_user.KullaniciId).first()
     festival = Festival.query\
         .filter(Festival.FestivalId == bilet.BiletFestivalId).first()
     return render_template('SatinAlma.html',bilet = bilet,kullanici=kullanici,festival=festival)
@@ -104,7 +149,7 @@ def route_islemozeti(id):
     bilet = Bilet.query\
         .filter(Bilet.BiletId == id).first()
     kullanici = Kullanici.query\
-        .filter(Kullanici.KullaniciId==1).first()
+        .filter(Kullanici.KullaniciId==current_user.KullaniciId).first()
     festival = Festival.query\
         .filter(Festival.FestivalId == bilet.BiletFestivalId).first()
     kalanBakiye = kullanici.KullaniciBakiyesi - bilet.BiletFiyati
@@ -132,6 +177,7 @@ def route_fest3(input):
 
 
 @app.route('/festivals')
+@login_required
 def route_fest2():
     festivals = Festival.query.all()
             #.filter(Festival.FestivalId == id)
@@ -148,12 +194,14 @@ def route_ioGoruntule(id):
     festival = Festival.query\
             .filter(Festival.FestivalId == bilet.BiletFestivalId).first()
     return render_template('islemOzetiGoruntule.html',festival = festival,islemozeti=islemozeti,bilet=bilet,kullanici=kullanici)
+
 @app.route('/profil')
+@login_required
 def route_pro1():
     kullanici = Kullanici.query\
-            .filter(Kullanici.KullaniciId == 1).first()
+            .filter(Kullanici.KullaniciId == current_user.KullaniciId).first()
     islemozetleri = IslemOzeti.query\
-            .filter(IslemOzeti.IslemKullaniciId == 1)
+            .filter(IslemOzeti.IslemKullaniciId == current_user.KullaniciId)
     return render_template('Profil.html',kullanici = kullanici,islemozetleri=islemozetleri)
 
 @app.route('/festival/<id>')
@@ -187,3 +235,59 @@ def route_muz3(input):
         return render_template('bulamadik.html')
     else:
         return render_template('muzisyenler.html',muzisyenler = muzisyenler)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = SigninForm(request.form)
+    if request.method == 'GET':
+        return render_template('login.html', form=form)
+    elif request.method == 'POST':
+        if form.validate():
+            user = Kullanici.query.filter_by(KullaniciEmail=form.email.data).first()
+            if user:
+                if user.KullaniciSifre == form.password.data:
+                    login_user(user)
+                    next = request.args.get('next')
+                    return redirect(next or url_for('main_page'))
+                else:
+                    flash('Wrong password')
+                    return redirect("/login")
+            else:
+                flash('user doesnt exist')
+                return redirect("/login")
+        else:
+            flash('form not validated')
+            return redirect("/login")
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = SignupForm()
+    if request.method == 'GET':
+        return render_template('signup.html', form = form)
+    elif request.method == 'POST':
+        if form.validate():
+            if Kullanici.query.filter_by(KullaniciEmail=form.email.data).first():
+                flash('Email address already exists')
+                return redirect("/signup")
+            else:
+                newuser = Kullanici(form.email.data, form.password.data, form.adi.data, form.adresi.data, form.turu.data)
+                db.session.add(newuser)
+                db.session.commit()
+                login_user(newuser)
+                return redirect("/")
+        else:
+            flash('Form didnt validate')
+            return redirect("/signup")
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/")
+
+
+@login_manager.user_loader
+def load_user(email):
+    return Kullanici.query.filter_by(KullaniciEmail = email).first()

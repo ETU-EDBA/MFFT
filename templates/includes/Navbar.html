@@ -27,14 +27,19 @@
           <button class="dropdown-item btn btn-outline-info my-2 my-sm-0" onclick="location.reload();location.href='/kategoriler/' + $('#searchValue').val()" id="searchButton"type="submit">Kategori Ara</button>
         </div>
       </div>
-      
-      <li class="navbar-nav dropdown">
-        <a class="btn btn-outline-primary "onclick="location.reload();location.href='/profil'">Profil</a>
-      </li>
+      {% if current_user.is_authenticated %}
+        <li class="navbar-nav dropdown">
+          <a class="btn btn-outline-primary "onclick="location.reload();location.href='/profil'" >Profil:{{current_user.KullaniciAdi}}</a>
+        </li>
 
-    <li class="navbar-nav dropdown">
-      <a class="btn btn-outline-primary "onclick="document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';window.location = '/';">Çıkış Yap</a>
-    </li>
+        <li class="navbar-nav dropdown">
+          <a href="/logout" class="btn btn-outline-primary ">Çıkış Yap</a>
+        </li>
+    {% else %}
+        <li class="navbar-nav dropdown">
+          <a href="/login" class="btn btn-outline-primary ">Giriş Yap</a>
+        </li>
+    {% endif %}
 
   </div>
 </nav>
