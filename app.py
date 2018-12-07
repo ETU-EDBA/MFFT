@@ -385,3 +385,11 @@ def festivalekleroute():
         db.session.commit()
         flash('Festival eklendi.')
         return redirect("/festivalekle")
+
+def addSahneAlma(festivalId,muzisyenId):
+    festival = Festival.query\
+            .filter(Festival.FestivalId == festivalId).first()
+    muzisyen = Muzisyen.query\
+            .filter(Muzisyen.MuzisyenId == muzisyenId).first()
+    festival.FestivalSahneAlma.append(muzisyen)
+    db.session.commit()
