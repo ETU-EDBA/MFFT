@@ -1,0 +1,51 @@
+{% extends 'Layout.html' %}
+  {% block body %}
+
+    <div class="container col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Festival Ekle
+        </div>
+        <div class="card-body">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+
+              {% for message in messages %}
+              <div class="flashes alert alert-primary" role="alert">
+                {{ message }}
+              </div>
+              {% endfor %}
+
+            {% endif %}
+          {% endwith %}
+          <form method="POST" action="/festivalekle" enctype="multipart/form-data">
+            <div class="form-group">
+              {{ form.adi.label }} {{ form.adi(size=20, class_="form-control") }}
+            </div>
+            <div class="form-group">
+              {{ form.afisi.label }} {{ form.afisi(size=20, class_="form-control") }}
+            </div>
+            <div class="form-group">
+              {{ form.adresi.label }} {{ form.adresi(size=20, class_="form-control") }}
+            </div>
+            <div class="form-group">
+              {{ form.baslamatarihi.label }} {{ form.baslamatarihi(type="date", class_="form-control") }}
+            </div>
+            <div class="form-group">
+              {{ form.bitistarihi.label }} {{ form.bitistarihi(type="date", class_="form-control") }}
+            </div>
+            <div class="form-group">
+              {{ form.aciklamasi.label }} {{ form.aciklamasi(class_="form-control") }}
+            </div>
+            <div class="form-group">
+              {{ form.bulundugusehir.label }} {{ form.bulundugusehir(class_="form-control") }}
+            </div>
+
+            
+            <input class="btn btn-primary"type="submit" value="Ekle">
+          </form>
+        </div>
+      </div>
+    </div>
+
+  {% endblock %}

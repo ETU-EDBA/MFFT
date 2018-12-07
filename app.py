@@ -7,9 +7,15 @@ from sqlalchemy.orm.exc import NoResultFound
 from flask_login import LoginManager, UserMixin, \
                                 login_required, login_user, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField
-from wtforms.validators import Email, DataRequired
 from sqlalchemy import asc
+
+from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField
+from wtforms.validators import Email, DataRequired
+from flask_wtf.file import FileField, FileRequired
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import CombinedMultiDict
+import os
+from os.path import join, dirname, realpath
 
 
 import string
@@ -21,6 +27,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://gqntjjrecxrcdo:29cb95ba43e52
 app.config['SECRET_KEY']='secret_xxx';
 db = SQLAlchemy(app)
 
+UPLOAD_FOLDER = join(dirname(realpath(__file__)), 'static/')
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 class SignupForm(FlaskForm):
     email = StringField('Email',validators=[DataRequired(),Email()])
@@ -31,6 +41,20 @@ class SignupForm(FlaskForm):
 class SigninForm(FlaskForm):
     email = StringField('Email')
     password = PasswordField('Sifre')
+
+class MuzisyenEkle(FlaskForm):
+    adi = StringField('Muzisyen Adi')
+    resmi = FileField('Muzisyen Resmi',validators=[FileRequired()])
+    kategorisi = StringField('Kategorisi')
+
+class FestivalEkle(FlaskForm):
+    adi = StringField('Festival Adi')
+    afisi = FileField('Festival Afisi',validators=[FileRequired()])
+    adresi = StringField('Festival Adresi')
+    baslamatarihi = StringField('Festival Baslama Tarihi')
+    bitistarihi = StringField('Festival Bitis Tarihi')
+    aciklamasi = StringField('Festival Aciklamasi')
+    bulundugusehir = StringField('Festivalin Bulundugu Sehir')
 
 # flask-login
 login_manager = LoginManager()
@@ -59,12 +83,28 @@ class Festival(db.Model):
   FestivalBiletleri = db.relationship('Bilet', backref='festival', lazy=True)
   FestivalSahneAlma = db.relationship('Muzisyen', secondary=SahneAlma, backref='festival',lazy=True)
 
+  def __init__(self, adi, afisi, adresi, baslama, bitis, aciklamasi, bulundugusehir):
+      self.FestivalAdi = adi
+      self.FestivalAfisi = afisi
+      self.FestivalAdresi = adresi
+      self.FestivalBaslamaTarihi = baslama
+      self.FestivalBitisTarihi = bitis
+      self.FestivalAciklamasi = aciklamasi
+      self.FestivalBulunduguSehir = bulundugusehir
+
+
+
 class Muzisyen(db.Model):
     __tablename__ = 'Muzisyen'
     MuzisyenId = db.Column('MuzisyenId', db.Integer, primary_key = True)
     MuzisyenAdi = db.Column(db.String(200))
     MuzisyenResmi = db.Column(db.String(200))
     MuzisyenKategori = db.Column(db.String(200))
+
+    def __init__(self, adi, resmi, kategori):
+        self.MuzisyenAdi = adi
+        self.MuzisyenResmi = resmi
+        self.MuzisyenKategori = kategori
 
 class Bilet(db.Model):
     __tablename__ = 'Bilet'
@@ -266,13 +306,13 @@ def route_muz3(input):
 
 @app.route('/giris', methods=['GET', 'POST'])
 def login():
-    form = SigninForm(request.form)
+    formGiris = SigninForm(request.form)
     if request.method == 'GET':
-        return render_template('Login.html', form=form)
+        return render_template('Login.html', form=formGiris)
     elif request.method == 'POST':
-            user = Kullanici.query.filter_by(KullaniciEmail=form.email.data).first()
+            user = Kullanici.query.filter_by(KullaniciEmail=formGiris.email.data).first()
             if user:
-                if user.KullaniciSifre == form.password.data:
+                if user.KullaniciSifre == formGiris.password.data:
                     login_user(user)
                     next = request.args.get('next')
                     return redirect(next or url_for('main_page'))
@@ -285,15 +325,15 @@ def login():
 
 @app.route('/kayit', methods=['GET', 'POST'])
 def signup():
-    form = SignupForm()
+    formSignup = SignupForm()
     if request.method == 'GET':
-        return render_template('Signup.html', form = form)
+        return render_template('Signup.html', form = formSignup)
     elif request.method == 'POST':
-            if Kullanici.query.filter_by(KullaniciEmail=form.email.data).first():
+            if Kullanici.query.filter_by(KullaniciEmail=formSignup.email.data).first():
                 flash('Email address already exists')
                 return redirect("/kayit")
             else:
-                newuser = Kullanici(form.email.data, form.password.data, form.adi.data, form.adresi.data, form.turu.data)
+                newuser = Kullanici(formSignup.email.data, formSignup.password.data, formSignup.adi.data, formSignup.adresi.data, formSignup.turu.data)
                 db.session.add(newuser)
                 db.session.commit()
                 login_user(newuser)
@@ -308,3 +348,40 @@ def logout():
 @login_manager.user_loader
 def load_user(email):
     return Kullanici.query.filter_by(KullaniciEmail = email).first()
+
+@app.route('/muzisyenekle', methods=['GET', 'POST'])
+def muzisyenekleroute():
+
+    formMuzisyen = MuzisyenEkle(CombinedMultiDict((request.files, request.form)));
+    if request.method == 'GET':
+        return render_template('MuzisyenEkle.html', form = formMuzisyen)
+    else:
+        f = formMuzisyen.resmi.data
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(
+            UPLOAD_FOLDER, filename
+        ))
+        yeniMuzisyen=Muzisyen(formMuzisyen.adi.data, filename, formMuzisyen.kategorisi.data)
+        db.session.add(yeniMuzisyen)
+        db.session.commit()
+        flash('Muzisyen eklendi.')
+        return redirect("/muzisyenekle")
+
+@app.route('/festivalekle', methods=['GET', 'POST'])
+def festivalekleroute():
+
+    formFestival = FestivalEkle(CombinedMultiDict((request.files, request.form)));
+    if request.method == 'GET':
+        return render_template('FestivalEkle.html', form = formFestival)
+    else:
+        f = formFestival.afisi.data
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(
+            UPLOAD_FOLDER, filename
+        ))
+        print(formFestival.baslamatarihi.data)
+        yeniFestival=Festival(formFestival.adi.data, filename, formFestival.adresi.data, datetime.strptime(formFestival.baslamatarihi.data, '%Y-%m-%d'), datetime.strptime(formFestival.bitistarihi.data, '%Y-%m-%d'), formFestival.aciklamasi.data, formFestival.bulundugusehir.data)
+        db.session.add(yeniFestival)
+        db.session.commit()
+        flash('Festival eklendi.')
+        return redirect("/festivalekle")
