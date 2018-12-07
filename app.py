@@ -22,6 +22,16 @@ from flask_mail import Mail, Message
 
 import string
 import random
+from threading import Thread
+
+import smtplib
+server = smtplib.SMTP('smtp.gmail.com', 587)
+
+#Next, log in to the server
+server.starttls()
+server.login("etu.edba@gmail.com", "hdks528tt9")
+
+
 
 app = Flask(__name__, static_url_path='/static')
 app.run(threaded=True)
@@ -32,6 +42,8 @@ app.config['MAIL_USERNAME'] = 'etu.edba@gmail.com'
 app.config['MAIL_PASSWORD'] = 'hdks528tt9'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_DEBUG']=True
+app.config.from_object(__name__)
 
 mail = Mail(app)
 mail.init_app(app)
@@ -221,6 +233,10 @@ def route_satinalma(id):
         .filter(Festival.FestivalId == bilet.BiletFestivalId).first()
     return render_template('SatinAlma.html',bilet = bilet,kullanici=kullanici,festival=festival)
 
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
 @app.route('/islemozeti/<id>')
 def route_islemozeti(id):
     bilet = Bilet.query\
@@ -239,10 +255,11 @@ def route_islemozeti(id):
          islemozeti = IslemOzeti(IslemPNR=pnr,IslemTarihi= datetime.now(),IslemBiletId=bilet.BiletId,IslemKullaniciId=kullanici.KullaniciId)
          db.session.add(islemozeti)
          db.session.commit()
-         msg = Message('Satın alma pnr kodunuz', sender = 'etu.edba@gmail.com', recipients = [current_user.KullaniciEmail])
-         bodyText = "Merhaba "+current_user.KullaniciAdi+",\nYapmış olduğunuz festival bileti satın alma sonucunda size özel oluşturulmuş PNR kodu aşağıdadır.\nPNR: "+pnr
-         msg.body=bodyText
-         mail.send(msg)
+
+         msg = "Satin alma pnr kodunuz\nMerhaba "+current_user.KullaniciAdi+",\nYapmis oldugunuz festival bileti satin alma sonucunda size ozel olusturulmus PNR kodu asagidadir.\nPNR: "+pnr
+
+         server.sendmail("etu.edba@gmail.com", current_user.KullaniciEmail, msg)
+
          return render_template('IslemOzeti.html',bilet = bilet, kullanici = kullanici, festival = festival, islemozeti=islemozeti)
 
 @app.route('/festivals/<input>')
