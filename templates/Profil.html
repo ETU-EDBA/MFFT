@@ -1,37 +1,39 @@
 {% extends 'Layout.html' %}
 
 {% block body %}
-<center>
-  <br>
-<div class="card" style="width: 18rem;">
-  <img class="card-img-top" src="/static/koala.jpg" alt="Card image cap">
-  <div class="card-body">
-    <h5 class="card-title"><font color="green">@{{kullanici.KullaniciAdi}}</font></h5>
-    <p class="card-text">{{kullanici.KullaniciEmail}}</p>
-    <p class="card-text">{{kullanici.KullaniciAdresi}}</p>
-    {% if current_user.is_authenticated and not current_user.KullaniciTuru=='festival'%}
-      <p class="card-text">Bakiyeniz :{{kullanici.KullaniciBakiyesi}}</p>
-    {% endif %}
+<div class="container col-md-4">
 
-    <p class="card-text"><font color="green">İşlem Özetleri</font></p>
-    <br>
-      {% for islemozeti in islemozetleri %}
-      IslemPNR= {{islemozeti.IslemPNR}}<br>
-      IslemTarihi={{islemozeti.IslemTarihi}}<br>
-      <a href="/islemozetigoruntule/{{islemozeti.IslemId}}" id="go_to_bilet_button" value={{islemozeti.IslemId}} class="btn btn-primary">Detayli Bilgi</a>
+  <div class="card">
+    <img class="card-img-top" src="/static/koala.jpg" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title"><font color="green">@{{kullanici.KullaniciAdi}}</font></h5>
+      <p class="card-text">{{kullanici.KullaniciEmail}}</p>
+      <p class="card-text">{{kullanici.KullaniciAdresi}}</p>
+      {% if current_user.is_authenticated and not current_user.KullaniciTuru=='festival'%}
+        <p class="card-text">Bakiyeniz :{{kullanici.KullaniciBakiyesi}}</p>
+      {% endif %}
+
+      <p class="card-text"><font color="green">İşlem Özetleri</font></p>
       <br>
-      <br>
-      {% endfor %}
-      {% if current_user.is_authenticated and current_user.KullaniciTuru=='festival'%}
-      <h4>Festival Admin Paneli:</h4>
-        <a class="btn btn-primary" href="/muzisyenekle">Muzisyen Ekle</a>
+        {% for islemozeti in islemozetleri %}
+        IslemPNR= {{islemozeti.IslemPNR}}<br>
+        IslemTarihi={{islemozeti.IslemTarihi}}<br>
+        <a href="/islemozetigoruntule/{{islemozeti.IslemId}}" id="go_to_bilet_button" value={{islemozeti.IslemId}} class="btn btn-primary">Detayli Bilgi</a>
         <br>
-        <a class="btn btn-primary" href="/festivalekle">Festival Ekle</a>
         <br>
-        <a class="btn btn-primary" href="/festivalmuzisyenekle">Festivale Müzisyen Ekle</a>
-        <br>
-    {% endif %}
+        {% endfor %}
+        {% if current_user.is_authenticated and current_user.KullaniciTuru=='festival'%}
+        <h4>Festival Admin Paneli:</h4>
+          <a class="btn btn-primary" href="/muzisyenekle">Muzisyen Ekle</a>
+          <br>
+          <a class="btn btn-primary" href="/festivalekle">Festival Ekle</a>
+          <br>
+          <a class="btn btn-primary" href="/festivalmuzisyenekle">Festivale Müzisyen Ekle</a>
+          <br>
+      {% endif %}
+    </div>
   </div>
+
 </div>
-</center>
+
 {% endblock %}

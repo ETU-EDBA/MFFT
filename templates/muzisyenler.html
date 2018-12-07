@@ -1,6 +1,7 @@
 {% extends 'Layout.html' %}
 
 {% block body %}
+<div class="container col-md-4">
   {% for muzisyen in muzisyenler %}
       <li class="list-group-item">
         <div class="card col-md-12" >
@@ -12,5 +13,7 @@
         </div>
       </li>
   {% endfor %}
+</div>
+
 
 {% endblock %}

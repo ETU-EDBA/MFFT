@@ -1,8 +1,10 @@
 {% extends 'Layout.html' %}
 
 {% block body %}
+<div class="container col-md-4">
+
   {% for muzisyen in muzisyenler %}
-  <div class="card col-md-6 offset-md-3">
+  <div class="card">
     <img class="card-img-top" src={{url_for('static', filename=muzisyen.MuzisyenResmi)}} style="width: auto; height: 600px;" alt="Card image cap">
     Muzisyen Adi: {{muzisyen.MuzisyenAdi}}<br>
     Muzisyen Kategorisi: {{muzisyen.MuzisyenKategori}}<br>
