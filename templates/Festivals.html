@@ -7,7 +7,8 @@
         <div class="card col-md-12" >
           <img class="card-img-top" src={{url_for('static', filename=festival.FestivalAfisi)}} alt="Card image cap">
           <div class="card-body">
-            <p class="card-text">Date: {{festival.FestivalBaslamaTarihi}}</p>
+            <p class="card-text"> {{festival.FestivalAdi}}</p>
+            <p class="card-text">Festival tarihi: {{festival.FestivalBaslamaTarihi.strftime('%Y-%m-%d')}}</p>
             <a href="/festival/{{festival.FestivalId}}" id="go_to_photo_button" value={{festival.FestivalId}} class="btn btn-primary">Festivali detayli görüntüle</a>
           </div>
         </div>
